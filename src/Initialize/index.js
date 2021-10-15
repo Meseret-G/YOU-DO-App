@@ -1,38 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getTodos } from '../views/todoData';
+import Todo from '../components/Todo';
+import TodoForm from '../components/TodoForm';
 
 function Initialize() {
-  const [domWriting, setDomWriting] = useState('Nothing Here!');
+  const [todos, setTodos] = useState([]);
+  const [editItem, setEditItem] = useState({});
 
-  const handleClick = (e) => {
-    console.warn(`You clicked ${e.target.id}`);
-    setDomWriting(`You clicked ${e.target.id}! Check the Console!`);
-  };
+  useEffect(() => {
+    getTodos().then(setTodos);
+  }, []);
 
   return (
-    <div className="App">
-      <h2>INSIDE APP COMPONENT</h2>
-      <div>
-        <button
-          type="button"
-          id="this-button"
-          className="btn btn-info"
-          onClick={handleClick}
-        >
-          I am THIS button
-        </button>
-      </div>
-      <div>
-        <button
-          type="button"
-          id="that-button"
-          className="btn btn-primary mt-3"
-          onClick={handleClick}
-        >
-          I am THAT button
-        </button>
-      </div>
-      <h3>{domWriting}</h3>
-    </div>
+    <>
+      <TodoForm obj={editItem} setTodos={setTodos} setEditItem={setEditItem} />
+      {todos.map((todo) => (
+        <Todo
+          key={todo.firebaseKey}
+          taco={todo}
+          setTodos={setTodos}
+          setEditItem={setEditItem}
+        />
+      ))}
+    </>
   );
 }
 
